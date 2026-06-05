@@ -1,7 +1,6 @@
 import { useState } from "react";
-
+import api from "../api/axios";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api/axios.js";
 
 export default function Register() {
   const [name, setName] = useState("");
