@@ -7,12 +7,11 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const validate = () => {
-    if (!name.trim() || !email.trim() || !password.trim()) {
+    if (!name || !email || !password) {
       return "All fields are required";
     }
 
@@ -28,33 +27,30 @@ export default function Register() {
     return null;
   };
 
-  const handleRegister = async () => {
-    const errMsg = validate();
+ const handleRegister = async () => {
+  const errMsg = validate();
+  if (errMsg) {
+    setError(errMsg);
+    return;
+  }
 
-    if (errMsg) {
-      setError(errMsg);
-      return;
-    }
+  try {
+    setError("");
 
-    try {
-      setError("");
-      setLoading(true);
+    const res = await api.post("/auth/register", {
+      name,
+      email,
+      password,
+    });
 
-      await api.post("/auth/register", {
-        name: name.trim(),
-        email: email.trim(),
-        password,
-      });
+    navigate("/");
+  } catch (err) {
+    const message =
+      err?.response?.data?.message || "Something went wrong";
 
-      navigate("/");
-    } catch (err) {
-      setError(
-        err?.response?.data?.message || "Something went wrong"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    setError(message);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
@@ -101,10 +97,10 @@ export default function Register() {
 
         <button
           onClick={handleRegister}
-          disabled={!name || !email || !password || loading}
+          disabled={!name || !email || !password}
           className="w-full mt-6 py-3 rounded-lg bg-black text-white font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? "Creating Account..." : "Create Account"}
+          Create Account
         </button>
 
         <p className="text-center text-sm text-gray-500 mt-5">
