@@ -1,0 +1,10 @@
+# dependencies
+node_modules/
+
+# environment variables
+.env
+
+# history / logs
+.history/
+logs/
+*.log
